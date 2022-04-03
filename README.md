@@ -1,47 +1,37 @@
-# Practica 6: Testing de una aplicacion de Spring Boot
+# a-rather-simple-test-suite
 
-## Objetivo de la práctica
+## Unit Testing
 
-Dado un desarrollo de Spring Boot, es necesario anhadir tests a las siguientes clases:
+He comprobado los métodos de validación de las clases DNI y Teléfono.
 
-- DNI & Telefono (Unit Tests) (Cada clase tiene un metodo y varias casuisticas para probar)
-- ProcessController (E2E Tests) (2 endpoints)
+Para el DNI, me he generado una función que crea números de DNI correctos. Las pruebas son:
 
-```
-mvn clean spring-boot:run
+-   Comprobar que al pasar un DNI correcto, la validación sea correcta
+-   Comprobar que al pasar un DNI con la letra incorrecta, la validación sea incorrecta
+-   Comprobar que al pasar los DNI no permitidos la validación sea incorrecta
+-   Comprobar que al pasar un DNI de longitud incorrecta la validación sea incorrecta
 
-curl -v -X POST http://localhost:8080/api/v1/process-step1-legacy \
-   -H "Content-Type: application/x-www-form-urlencoded" \
-   -d "fullName=Juan%20Antonio%20Brena%20Moral&dni=12345678Z&telefono=%2B34%20600903434"
+Para el teléfono, las pruebas son:
 
-curl -v -X POST http://localhost:8080/api/v1/process-step1 \
-   -H 'Content-Type: application/json' \
-   -d '{"fullName":"Juan Antonio Brena Moral","dni":"12345678Z", "telefono":"+34 600903434"}'
-```
+-   Que al pasar un número correcto, sin espacios, la validación sea correcta
+-   Que al pasar un número correct, con prefijo nacional, sin espacios, la validación sea correcta
+-   Que al pasar un número correcto, con espacios, la validación sea correcta
+-   Que al pasar un número correcto, con espacios, con prefijo nacional la validación sea correcta
+-   Que al pasar un número con demasiados dígitios la validación sea incorrecta
+-   Que al pasar un número con letras la validación sea incorrecta
 
-## Entrega
+## E2E Testing
 
-Sube la practica solucionada a un repositorio de Github.
-y crea un documento en formato Markdown, explicando las casuisticas que se van a probar.
+Aquí he comprobado las diferentes respuestas de los dos endpoints del ProcessController.
 
-## Criterios de evaluación
+Las pruebas para el endpoint /process-step1-legacy:
 
-- 0 -> 5
-    - Entregar en fecha
-    - Subir ejemplo a Github
-    - Ejemplo funcional
-    - Aparentemente funciona
-    - Con README
-- 5 -> 9
-    - La práctica entregada hace lo que se pide
-- 9 -> 10
-    - El alumno explora la materia y añade elementos adicionales
+-   Si el post tiene los datos correctos verifica que el status sea 200, y la respuesta ResponseHTMLGenerator.message1
+-   Si el post tiene los datos, pero incorrectos, status 200 y respuesta ResponseHTMLGenerator.message2
+-   Si al post le faltan datos, status 500 y verifica que salta un error
 
-**Nota:** Si el alumno no entrega a tiempo la practica, la calificacion maxima
-sera de un 5 si el retraso es de una semana y no presentado si el retraso es major.
+Las pruebas para el endpoint /process-step1
 
-## References
-
-- https://docs.spring.io/spring-boot/docs/1.5.16.RELEASE/reference/html/boot-features-testing.html
-- https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/test/web/client/TestRestTemplate.html
-- https://www.urlencoder.org/
+-   Si el post tiene los datos correcots, status 200 y OK
+-   Si el post tiene algún dato incorrecto, status 200 y KO
+-   si le post tiene los datos incorrectos, status 400 y KO
